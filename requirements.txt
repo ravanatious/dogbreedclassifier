@@ -8,3 +8,4 @@ keras
 pillow
 Flask-Bootstrap==3.3.7.1
 Flask-WTF==1.0.0
+opencv-python-headless==4.2.0.34
