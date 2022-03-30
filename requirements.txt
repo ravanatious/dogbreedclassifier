@@ -2,7 +2,7 @@ numpy
 Flask
 matplotlib
 pandas
-tensorflow
+tensorflow-cpu
 gunicorn
 keras
 Flask-Bootstrap==3.3.7.1
