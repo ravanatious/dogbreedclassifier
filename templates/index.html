@@ -1,4 +1,4 @@
-{% extends 'bootstrap/base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
 <!DOCTYPE html>
 <!--[if lt IE 9 ]><html class="no-js oldie" lang="en"> <![endif]-->
 <!--[if IE 9 ]><html class="no-js oldie ie9" lang="en"> <![endif]-->
@@ -21,34 +21,33 @@
 
     <!-- CSS
     ================================================== -->
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/vendor.css">
-    <link rel="stylesheet" href="css/main.css">
-
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/vendor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
     <!-- script
     ================================================== -->
-    <script src="js/modernizr.js"></script>
-    <script src="js/pace.min.js"></script>
-
+    <script src="{{ url_for('static',filename='js/modernizr.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/pace.min.js') }}"></script>
+    
     <!-- favicons
     ================================================== -->
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static',filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static',filename='favicon.ico') }}" type="image/x-icon">
 
 </head>
 
 <body id="top">
-
     <!-- header
     ================================================== -->
     <header class="s-header">
 
         <div class="header-logo">
-            <a class="site-logo" href="index.html">
-                <img src="images/logo.png" alt="Homepage">
+            <a class="site-logo" href="{{ url_for('home') }}">
+                
+                <img src="{{ url_for('static',filename='images/logo.png') }}" alt="Homepage">
             </a>
         </div>
-
+     
         <nav class="header-nav">
 
             <a href="#0" class="header-nav__close" title="close"><span>Close</span></a>
@@ -91,7 +90,8 @@
 
     <!-- home
     ================================================== -->
-    <section id="home" class="s-home target-section" data-parallax="scroll" data-image-src="images/dog_love.jpg" data-natural-width=3000 data-natural-height=2000 data-position-y=center>
+    
+    <section id="home" class="s-home target-section" data-parallax="scroll" data-image-src="{{ url_for('static',filename='images/dog_love.jpg') }}" data-natural-width=3000 data-natural-height=2000 data-position-y=center>
 
         <div class="overlay"></div>
         <div class="shadow-overlay"></div>
@@ -168,13 +168,13 @@
             <div class="col-full">
                 <div class="clients">
                     
-                    <a href="#0" title="" class="clients__slide"><img src="images/dog pics/chihuahua.jpg" /></a>
-                    <a href="#0" title="" class="clients__slide"><img src="images/dog pics/pomeranian.jpg" /></a>
-                    <a href="#0" title="" class="clients__slide"><img src="images/dog pics/shih_tzu.jpg" /></a>
-                    <a href="#0" title="" class="clients__slide"><img src="images/dog pics/yorkshire_terrier.jpg" /></a>
-                    <a href="#0" title="" class="clients__slide"><img src="images/dog pics/pug.jpg" /></a>
-                    <a href="#0" title="" class="clients__slide"><img src="images/dog pics/spitz.jpg" /></a>
-                    <a href="#0" title="" class="clients__slide"><img src="images/dog pics/french bulldog.jpg" /></a>
+                    <a href="#0" title="" class="clients__slide"><img src="{{ url_for('static',filename='images/dog pics/chihuahua.jpg') }}" /></a>
+                    <a href="#0" title="" class="clients__slide"><img src="{{ url_for('static',filename='images/dog pics/pomeranian.jpg') }}" /></a>
+                    <a href="#0" title="" class="clients__slide"><img src="{{ url_for('static',filename='images/dog pics/shih_tzu.jpg') }}" /></a>
+                    <a href="#0" title="" class="clients__slide"><img src="{{ url_for('static',filename='images/dog pics/yorkshire_terrier.jpg') }}" /></a>
+                    <a href="#0" title="" class="clients__slide"><img src="{{ url_for('static',filename='images/dog pics/pug.jpg') }}" /></a>
+                    <a href="#0" title="" class="clients__slide"><img src="{{ url_for('static',filename='images/dog pics/spitz.jpg') }}" /></a>
+                    <a href="#0" title="" class="clients__slide"><img src="{{ url_for('static',filename='images/dog pics/french bulldog.jpg') }}" /></a>
                     
                 </div> <!-- end clients -->
             </div> <!-- end col-full -->
@@ -204,29 +204,42 @@
                 </div>
                 <div class="service-text">
                     <h3 class="h2">Try Out Our Dog Breed Classifier</h3>
-                    <p>Nemo cupiditate ab quibusdam quaerat impedit magni. Earum suscipit ipsum laudantium. 
-                    Quo delectus est. Maiores voluptas ab sit natus veritatis ut. Debitis nulla cumque veritatis.
-                    Sunt suscipit voluptas ipsa in tempora esse soluta sint.
-                    </p>
+                    <div class="form-group-lg" data-aos="fade-up">
+                        {% if form %}
+                            {{ wtf.quick_form(form) }}
+                        {% endif %} 
+                    </div>
+                    {% if file_url %}
+                    <div class="row">
+                        <h2>Prediction Result</h2>
+                        <p>
+                        Please refer to the predictions below for the image you have uploaded
+                        </p>
+            
+                        <div class="col-md-4">
+                            <img src="{{file_url}}" class="img-fluid img-thumbnail">
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h2> Predicted Dog Breed </h2>
+                            <ul>
+                            <li>{{breed}} with a probability of {{pred_score}} %</li>
+                            </ul>
+                        </div>
+                
+                        <div>
+                        <a class="btn btn-primary" href="{{ url_for('home') }}" role="button">Try Another Picture</a>
+                        
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
-            {% block content %}
-                <div class="container">
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-info" role="alert">{{ message }}</div>
-                    {% endfor %}
-                    % endif %}
-                 {% endwith %}
-
-                {# application content needs to be provided in the app_content block #}
-                {% block app_content %}{% endblock %}
-                </div>
-                {% endblock %}
-                </div>
-
+    
+            </div>
         </div> <!-- end services-list -->
-
+    
     </section> <!-- end s-services -->
 
 
@@ -256,7 +269,7 @@
         <div class="row section-header" data-aos="fade-up">
             <div class="col-full">
                 <h3 class="subhead">Contact Us</h3>
-                <h1 class="display-2 display-2--light">Reach out for a new project or just say hello</h1>
+                <h1 class="display-2 display-2--light">Got Enquires Or Want To Book A Viewing?</h1>
             </div>
         </div>
 
@@ -331,8 +344,8 @@
                     <div class="cinfo">
                         <h5>Call Us At</h5>
                         <p>
-                            Phone: (+65) 9555 6040<br>
-                            Mobile: (+65) 8555 2382<br>
+                            Phone: (+65) XXXX XXXX<br>
+                            Mobile: (+65) XXXX XXXX<br>
                         </p>
                     </div>
 
@@ -365,15 +378,13 @@
             <div class="col-six tab-full left footer-desc">
 
                 <div class="footer-logo"></div>
-                Proin eget tortor risus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Nulla porttitor accumsan tincidunt. Nulla porttitor accumsan tincidunt. Quaerat voluptas autem necessitatibus vitae aut.
-
+                
             </div>
 
             <div class="col-six tab-full right footer-subscribe">
 
                 <h4>Get Notified</h4>
-                <p>Quia quo qui sed odit. Quaerat voluptas autem necessitatibus vitae aut non alias sed quia. Ut itaque enim optio ut excepturi deserunt iusto porro.</p>
-
+                
                 <div class="subscribe-form">
                     <form id="mc-form" class="group" novalidate="true">
                         <input type="email" value="" name="EMAIL" class="email" id="mc-email" placeholder="Email Address" required="">
@@ -461,9 +472,9 @@
 
     <!-- Java Script
     ================================================== -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
+    <script src="{{ url_for('static',filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/plugins.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/main.js') }}"></script>
 
 </body>
 

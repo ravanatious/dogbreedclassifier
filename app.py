@@ -69,7 +69,8 @@ def home():
         file_url = None
         breed = None
         pred_score = None
-    return render_template("home.html", form=form, file_url=file_url, breed=breed, pred_score=pred_score)
+    return render_template("index.html", form=form, file_url=file_url, breed=breed, pred_score=pred_score)
+
 
 
 if __name__ == "__main__":
