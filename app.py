@@ -45,11 +45,16 @@ def get_prediction(img_path, breeds):
     img_preprocessed = preprocess_input(img_resized)
     img_reshaped = img_preprocessed.reshape((1, 299, 299, 3))
     prediction = model.predict(img_reshaped)
-    breed = breeds[np.argmax(prediction)] 
+    breed = breeds[np.argmax(prediction)][0] 
     pred_score = round(prediction[0][np.argmax(prediction)] * 100,2)
 
+    if pred_score < 50:
+        breed_id = "We cannot identify this picture. Please try again with another picture."
     
-    return breed, pred_score
+    else: 
+        breed_id = "This is most likely a {0}".format(breed)
+    
+    return breed_id
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -64,14 +69,13 @@ def home():
         f.save(file_url)
         form = None
         breedlist = read_class_csv(filepath)
-        breed, pred_score = get_prediction(file_url,breedlist)
+        breed_id = get_prediction(file_url,breedlist)
     else:
         file_url = None
-        breed = None
-        pred_score = None
-    return render_template("index.html", form=form, file_url=file_url, breed=breed, pred_score=pred_score)
+        breed_id = None
+    return render_template("index.html", form=form, file_url=file_url, breed_id=breed_id)
 
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

@@ -19,7 +19,7 @@ model = keras.models.load_model('static/inceptionv3_rev2')
 
 
 
-img = cv2.imread('static/golden retriever.jpg')
+img = cv2.imread('static/corgi.jpg')
 img_resized = cv2.resize(img, (299, 299))
 img_preprocessed = preprocess_input(img_resized)
 img_reshaped = img_preprocessed.reshape((1, 299, 299, 3))
@@ -30,4 +30,4 @@ value = prediction[0][index] * 100
 
 
 
-print(f'This is a: {breeds[index]} with a {value}  accuracy')
+print(f'This is a: {breeds[index][0]} with a {value}  accuracy')
